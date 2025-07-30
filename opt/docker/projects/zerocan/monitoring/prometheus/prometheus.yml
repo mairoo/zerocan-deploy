@@ -9,8 +9,8 @@ scrape_configs:
     scrape_interval: 10s
     static_configs:
       - targets:
-        - 'pincoin-backend-1:8080'
-        - 'pincoin-backend-2:8080'
+        - 'zerocan-backend-1:8080'
+        - 'zerocan-backend-2:8080'
     scrape_timeout: 5s
 
   # Prometheus 자체 메트릭

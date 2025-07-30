@@ -6,7 +6,7 @@
 /opt/docker/
 ├── logs/                           # 도커 정리 작업 로그
 ├── scripts/                        # cleanup.sh 등 스크립트
-└── projects/pincoin/
+└── projects/zerocan/
     ├── backend/logs/               # 백엔드 애플리케이션 로그
     ├── frontend/logs/              # 프론트엔드 애플리케이션 로그  
     ├── monitoring/logs/            # Grafana 로그
@@ -22,29 +22,29 @@ sudo chown ubuntu:ubuntu /opt/docker
 mkdir -p /opt/docker/{logs,scripts}
 
 # 프로젝트 로그 디렉토리 생성
-mkdir -p /opt/docker/projects/pincoin/{backend,frontend,monitoring,infra}/logs/
+mkdir -p /opt/docker/projects/zerocan/{backend,frontend,monitoring,infra}/logs/
 
 # 로그 디렉토리도 www-data가 쓸 수 있도록 권한 조정
-sudo chown www-data:www-data /opt/docker/projects/pincoin/backend/logs/
-sudo chown www-data:www-data /opt/docker/projects/pincoin/frontend/logs/
-sudo chown www-data:www-data /opt/docker/projects/pincoin/monitoring/logs/
-sudo chown www-data:www-data /opt/docker/projects/pincoin/infra/logs/
+sudo chown www-data:www-data /opt/docker/projects/zerocan/backend/logs/
+sudo chown www-data:www-data /opt/docker/projects/zerocan/frontend/logs/
+sudo chown www-data:www-data /opt/docker/projects/zerocan/monitoring/logs/
+sudo chown www-data:www-data /opt/docker/projects/zerocan/infra/logs/
 
 # 디렉토리 권한 설정 (www-data가 파일 생성/삭제 가능하도록)
-sudo chmod 755 /opt/docker/projects/pincoin/backend/logs/
-sudo chmod 755 /opt/docker/projects/pincoin/frontend/logs/
-sudo chmod 755 /opt/docker/projects/pincoin/monitoring/logs/
-sudo chmod 755 /opt/docker/projects/pincoin/infra/logs/
+sudo chmod 755 /opt/docker/projects/zerocan/backend/logs/
+sudo chmod 755 /opt/docker/projects/zerocan/frontend/logs/
+sudo chmod 755 /opt/docker/projects/zerocan/monitoring/logs/
+sudo chmod 755 /opt/docker/projects/zerocan/infra/logs/
 ```
 
 ## nginx 설정 및 logrotate 설정 심볼릭 링크
 
 ```
-sudo ln -s /opt/docker/projects/pincoin/host/pincoin.kr /etc/nginx/sites-enabled/pincoin.kr
-sudo ln -s /opt/docker/projects/pincoin/host/logrotate /etc/logrotate.d/pincoin
+sudo ln -s /opt/docker/projects/zerocan/host/zerocan.com /etc/nginx/sites-enabled/zerocan.com
+sudo ln -s /opt/docker/projects/zerocan/host/logrotate /etc/logrotate.d/zerocan
 
 # 주의: logrotate 원본 파일이 root 소유여야 함
-sudo chown root:root /opt/docker/projects/pincoin/host/logrotate
+sudo chown root:root /opt/docker/projects/zerocan/host/logrotate
 ```
 
 ## Git Actions 연동
@@ -84,17 +84,17 @@ sudo chown root:root /opt/docker/projects/pincoin/host/logrotate
 
 ```shell
 # 호스트 nginx 로그 파일들만 www-data로 변경
-sudo chown www-data:www-data /opt/docker/projects/pincoin/backend/logs/host-*.log
-sudo chown www-data:www-data /opt/docker/projects/pincoin/frontend/logs/host-*.log
-sudo chown www-data:www-data /opt/docker/projects/pincoin/monitoring/logs/grafana-*.log
-sudo chown www-data:www-data /opt/docker/projects/pincoin/infra/logs/keycloak-*.log
-sudo chown www-data:www-data /opt/docker/projects/pincoin/infra/logs/default-*.log
+sudo chown www-data:www-data /opt/docker/projects/zerocan/backend/logs/host-*.log
+sudo chown www-data:www-data /opt/docker/projects/zerocan/frontend/logs/host-*.log
+sudo chown www-data:www-data /opt/docker/projects/zerocan/monitoring/logs/grafana-*.log
+sudo chown www-data:www-data /opt/docker/projects/zerocan/infra/logs/keycloak-*.log
+sudo chown www-data:www-data /opt/docker/projects/zerocan/infra/logs/default-*.log
 
 # logrotate 설정 문법 검사
-sudo logrotate -d /etc/logrotate.d/pincoin
+sudo logrotate -d /etc/logrotate.d/zerocan
 
 # 강제로 로테이션 실행
-sudo logrotate -f /etc/logrotate.d/pincoin
+sudo logrotate -f /etc/logrotate.d/zerocan
 ```
 
 ## 도커 정리 스크립트 

@@ -1,4 +1,4 @@
-name: Build for production
+name: Build backend for production
 
 on:
   workflow_dispatch:
@@ -28,7 +28,7 @@ jobs:
         run: |
           mkdir -p src/main/resources
           cat << 'EOF' > src/main/resources/application-prod.yml
-          ${{ secrets.PINCOIN_APPLICATION_PROD_YML }}
+          ${{ secrets.ZEROCAN_APPLICATION_PROD_YML }}
           EOF
 
       - name: Build Docker image

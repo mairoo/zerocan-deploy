@@ -52,7 +52,7 @@ services:
       - KC_DB_URL=${KEYCLOAK_DB_URL}
       - KC_DB_USERNAME=${KEYCLOAK_POSTGRES_USER}
       - KC_DB_PASSWORD=${KEYCLOAK_POSTGRES_PASSWORD}
-      - KC_HOSTNAME=keycloak.pincoin.kr
+      - KC_HOSTNAME=keycloak.zerocan.com
       - KC_PROXY_ADDRESS_FORWARDING=true # v2: 프록시 사용 선언
       - KC_PROXY_HEADERS=xforwarded # v2: 헤더 형식 지정
       - KC_HTTP_ENABLED=true # 프록시 환경 필수값

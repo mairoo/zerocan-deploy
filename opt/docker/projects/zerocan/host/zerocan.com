@@ -1,13 +1,13 @@
 # HTTPS 서버 (Keycloak)
 server {
 	listen 443 ssl http2;
-	server_name keycloak.pincoin.kr;
+	server_name keycloak.zerocan.com;
 
-	ssl_certificate /opt/docker/projects/pincoin/host/pincoin.kr.pem;
-	ssl_certificate_key /opt/docker/projects/pincoin/host/pincoin.kr.key;
+	ssl_certificate /opt/docker/projects/zerocan/host/zerocan.com.pem;
+	ssl_certificate_key /opt/docker/projects/zerocan/host/zerocan.com.key;
 
-	access_log /opt/docker/projects/pincoin/infra/logs/keycloak-access.log;
-	error_log /opt/docker/projects/pincoin/infra/logs/keycloak-error.log;
+	access_log /opt/docker/projects/zerocan/infra/logs/keycloak-access.log;
+	error_log /opt/docker/projects/zerocan/infra/logs/keycloak-error.log;
 
 	location / {
 		proxy_pass http://localhost:8801;
@@ -29,10 +29,10 @@ server {
 server {
 	listen 443 ssl http2;
 	listen [::]:443 ssl http2;
-	server_name api.pincoin.kr;
+	server_name api.zerocan.com;
 
-	ssl_certificate /opt/docker/projects/pincoin/host/pincoin.kr.pem;
-	ssl_certificate_key /opt/docker/projects/pincoin/host/pincoin.kr.key;
+	ssl_certificate /opt/docker/projects/zerocan/host/zerocan.com.pem;
+	ssl_certificate_key /opt/docker/projects/zerocan/host/zerocan.com.key;
 
 	# SSL 보안 설정
 	ssl_protocols TLSv1.2 TLSv1.3;
@@ -61,8 +61,8 @@ server {
 	proxy_read_timeout 30s;
 
 	# 로그 설정
-	access_log /opt/docker/projects/pincoin/backend/logs/host-access.log;
-	error_log /opt/docker/projects/pincoin/backend/logs/host-error.log;
+	access_log /opt/docker/projects/zerocan/backend/logs/host-access.log;
+	error_log /opt/docker/projects/zerocan/backend/logs/host-error.log;
 
 	location / {
 		proxy_pass http://localhost:8800;
@@ -79,11 +79,11 @@ server {
 server {
     listen 443 ssl http2;
     listen [::]:443 ssl http2;
-    server_name grafana.pincoin.kr;
+    server_name grafana.zerocan.com;
 
     # SSL 인증서 경로
-    ssl_certificate /opt/docker/projects/pincoin/host/pincoin.kr.pem;
-    ssl_certificate_key /opt/docker/projects/pincoin/host/pincoin.kr.key;
+    ssl_certificate /opt/docker/projects/zerocan/host/zerocan.com.pem;
+    ssl_certificate_key /opt/docker/projects/zerocan/host/zerocan.com.key;
 
     # SSL 보안 설정
     ssl_protocols TLSv1.2 TLSv1.3;
@@ -112,8 +112,8 @@ server {
     proxy_read_timeout 30s;
 
     # 로그 설정
-    access_log /opt/docker/projects/pincoin/monitoring/logs/grafana-access.log;
-    error_log /opt/docker/projects/pincoin/monitoring/logs/grafana-error.log;
+    access_log /opt/docker/projects/zerocan/monitoring/logs/grafana-access.log;
+    error_log /opt/docker/projects/zerocan/monitoring/logs/grafana-error.log;
 
     location / {
         proxy_pass http://localhost:9300;
@@ -135,11 +135,11 @@ server {
 server {
     listen 443 ssl http2;
     listen [::]:443 ssl http2;
-    server_name www.pincoin.kr;
+    server_name www.zerocan.com;
 
     # SSL 인증서 경로
-    ssl_certificate /opt/docker/projects/pincoin/host/pincoin.kr.pem;
-    ssl_certificate_key /opt/docker/projects/pincoin/host/pincoin.kr.key;
+    ssl_certificate /opt/docker/projects/zerocan/host/zerocan.com.pem;
+    ssl_certificate_key /opt/docker/projects/zerocan/host/zerocan.com.key;
 
     # SSL 보안 설정
     ssl_protocols TLSv1.2 TLSv1.3;
@@ -168,8 +168,8 @@ server {
     proxy_read_timeout 30s;
 
     # 로그 설정
-    access_log /opt/docker/projects/pincoin/frontend/logs/host-access.log;
-    error_log /opt/docker/projects/pincoin/frontend/logs/host-error.log;
+    access_log /opt/docker/projects/zerocan/frontend/logs/host-access.log;
+    error_log /opt/docker/projects/zerocan/frontend/logs/host-error.log;
 
     location / {
         proxy_pass http://localhost:8300;
@@ -194,8 +194,8 @@ server {
 	server_name _;
 
 	# SSL 인증서 (기본값 사용)
-	ssl_certificate /opt/docker/projects/pincoin/host/pincoin.kr.pem;
-	ssl_certificate_key /opt/docker/projects/pincoin/host/pincoin.kr.key;
+	ssl_certificate /opt/docker/projects/zerocan/host/zerocan.com.pem;
+	ssl_certificate_key /opt/docker/projects/zerocan/host/zerocan.com.key;
 
 	# SSL 보안 설정
 	ssl_protocols TLSv1.2 TLSv1.3;
@@ -210,8 +210,8 @@ server {
 	add_header X-XSS-Protection "1; mode=block";
 
 	# 로그 설정
-	access_log /opt/docker/projects/pincoin/infra/logs/default-access.log;
-	error_log /opt/docker/projects/pincoin/infra/logs/default-error.log;
+	access_log /opt/docker/projects/zerocan/infra/logs/default-access.log;
+	error_log /opt/docker/projects/zerocan/infra/logs/default-error.log;
 
 	# 404 페이지 반환 (보안상 403보다 404가 더 안전)
 	location / {

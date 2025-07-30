@@ -1,4 +1,4 @@
-name: Deploy for production
+name: Deploy backend for production
 
 on:
   workflow_dispatch:
@@ -9,5 +9,5 @@ jobs:
     steps:
       - name: Deploy with docker-compose
         run: |
-          cd /opt/docker/projects/pincoin/backend
+          cd /opt/docker/projects/zerocan/backend
           bash ./deploy.sh
