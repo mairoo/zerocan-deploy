@@ -42,6 +42,8 @@ services:
     restart: unless-stopped
     ports:
       - "8801:8080"
+    volumes:
+      - keycloak-data:/opt/keycloak/data
     depends_on:
       - keycloak-postgres
     networks:
@@ -77,3 +79,5 @@ volumes:
     name: ${PREFIX}-redis-data
   keycloak-postgres-data:
     name: ${PREFIX}-keycloak-postgres-data
+  keycloak-data:
+    name: ${PREFIX}-keycloak-data
