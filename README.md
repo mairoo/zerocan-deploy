@@ -27,7 +27,7 @@ update-alternatives --config editor
 
 ### `ubuntu` 관리 계정 (`ubuntu` 디폴트 계정은 이미 `sudo` 그룹에 속해 있음)
 
-```
+```shell
 visudo
 ```
 
