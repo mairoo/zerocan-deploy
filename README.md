@@ -98,7 +98,7 @@ sudo logrotate -f /etc/logrotate.d/pincoin
 ```
 
 ## 도커 정리 스크립트 
-- [/opt/docker/scripts/cleanup.sh](cleanup.sh)
+- [cleanup.sh](/opt/docker/scripts/cleanup.sh)
 
 ```
 crontab -e
