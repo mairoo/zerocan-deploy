@@ -6,8 +6,8 @@ server {
 	ssl_certificate /opt/docker/projects/pincoin/ssl/pincoin.kr.pem;
 	ssl_certificate_key /opt/docker/projects/pincoin/ssl/pincoin.kr.key;
 
-	access_log /opt/docker/projects/pincoin/infra/logs/access.log;
-	error_log /opt/docker/projects/pincoin/infra/logs/error.log;
+	access_log /opt/docker/projects/pincoin/infra/logs/keycloak-access.log;
+	error_log /opt/docker/projects/pincoin/infra/logs/keycloak-error.log;
 
 	location / {
 		proxy_pass http://localhost:8801;

@@ -1,0 +1,115 @@
+
+
+# 백엔드 호스트 nginx 로그
+/opt/docker/projects/pincoin/backend/logs/host-*.log {
+    daily
+    rotate 30
+    compress
+    delaycompress
+    missingok
+    notifempty
+    su www-data www-data
+    create 644 www-data www-data
+    postrotate
+        /bin/systemctl reload nginx 2>/dev/null || true
+    endscript
+}
+
+# 백엔드 도커 nginx 로그
+/opt/docker/projects/pincoin/backend/logs/load-balancer-*.log {
+    daily
+    rotate 30
+    compress
+    delaycompress
+    missingok
+    notifempty
+    su root root
+    create 644 root root
+    copytruncate
+}
+
+# 백엔드 애플리케이션 로그
+/opt/docker/projects/pincoin/backend/logs/application*.log {
+    daily
+    rotate 30
+    compress
+    delaycompress
+    missingok
+    notifempty
+    su root root
+    create 644 root root
+    copytruncate
+}
+
+# 프론트엔드 호스트 nginx 로그
+/opt/docker/projects/pincoin/frontend/logs/host-*.log {
+    daily
+    rotate 30
+    compress
+    delaycompress
+    missingok
+    notifempty
+    su www-data www-data
+    create 644 www-data www-data
+    postrotate
+        /bin/systemctl reload nginx 2>/dev/null || true
+    endscript
+}
+
+# 프론트엔드 도커 nginx 로그 (경로 오타 수정)
+/opt/docker/projects/pincoin/frontend/logs/load-balancer-*.log {
+    daily
+    rotate 30
+    compress
+    delaycompress
+    missingok
+    notifempty
+    su root root
+    create 644 root root
+    copytruncate
+}
+
+# Grafana nginx 로그 (호스트 nginx 로그)
+/opt/docker/projects/pincoin/monitoring/logs/grafana-*.log {
+    daily
+    rotate 7
+    compress
+    delaycompress
+    missingok
+    notifempty
+    su www-data www-data
+    create 644 www-data www-data
+    postrotate
+        /bin/systemctl reload nginx 2>/dev/null || true
+    endscript
+}
+
+# Keycloak nginx 로그 (호스트 nginx 로그)
+/opt/docker/projects/pincoin/infra/logs/keycloak-*.log {
+    daily
+    rotate 7
+    compress
+    delaycompress
+    missingok
+    notifempty
+    su www-data www-data
+    create 644 www-data www-data
+    postrotate
+        /bin/systemctl reload nginx 2>/dev/null || true
+    endscript
+}
+
+# 기타 명시되지 않은 요청 로그 (호스트 nginx 로그)
+/opt/docker/projects/pincoin/infra/logs/default-*.log {
+    daily
+    rotate 7
+    compress
+    delaycompress
+    missingok
+    notifempty
+    su www-data www-data
+    create 644 www-data www-data
+    postrotate
+        /bin/systemctl reload nginx 2>/dev/null || true
+    endscript
+}

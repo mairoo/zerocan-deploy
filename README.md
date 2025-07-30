@@ -1,19 +1,5 @@
 # 도커 기반 프로젝트 운영 배포 예제
 
-## 디렉토리 파일 구성
-
-```
-/opt/docker/scripts/
-/opt/docker/scripts/cleanup.sh
-/opt/docker/logs/
-/opt/docker/projects/pincoin/
-/opt/docker/projects/pincoin/infra/
-/opt/docker/projects/pincoin/backend/
-/opt/docker/projects/pincoin/frontend/
-/opt/docker/projects/pincoin/monitoring/
-/opt/docker/projects/pincoin/ssl/
-```
-
 ## Git Actions 연동
 
 ## 포트 매핑
@@ -39,9 +25,42 @@
 | backend-2         | -     | 8080 | 내부전용      |
 | prometheus        | -     | 9090 | 내부전용      |
 | grafana           | 9300  | 3000 | 모니터링      |
-| nginx-web         | 8300  | 3000 | 웹 로드밸런서   |
+| nginx-www         | 8300  | 3000 | 웹 로드밸런서   |
 | frontend-1        | -     | 3000 | 내부전용      |
 | frontend-2        | -     | 3000 | 내부전용      |
+
+## logrotate
+
+소유권 일관성 유지
+- 호스트 nginx 로그: www-data www-data (nginx 프로세스 실행 유저)
+- 도커 내부 로그: root root (도커 컨테이너는 보통 root로 실행)
+
+```
+# 호스트 nginx 로그 파일들만 www-data로 변경
+sudo chown www-data:www-data /opt/docker/projects/pincoin/backend/logs/host-*.log
+sudo chown www-data:www-data /opt/docker/projects/pincoin/frontend/logs/host-*.log
+sudo chown www-data:www-data /opt/docker/projects/pincoin/monitoring/logs/grafana-*.log
+sudo chown www-data:www-data /opt/docker/projects/pincoin/infra/logs/keycloak-*.log
+sudo chown www-data:www-data /opt/docker/projects/pincoin/infra/logs/default-*.log
+
+# 로그 디렉토리도 www-data가 쓸 수 있도록 권한 조정
+sudo chown www-data:www-data /opt/docker/projects/pincoin/backend/logs/
+sudo chown www-data:www-data /opt/docker/projects/pincoin/frontend/logs/
+sudo chown www-data:www-data /opt/docker/projects/pincoin/monitoring/logs/
+sudo chown www-data:www-data /opt/docker/projects/pincoin/infra/logs/
+
+# 디렉토리 권한 설정 (www-data가 파일 생성/삭제 가능하도록)
+sudo chmod 755 /opt/docker/projects/pincoin/backend/logs/
+sudo chmod 755 /opt/docker/projects/pincoin/frontend/logs/
+sudo chmod 755 /opt/docker/projects/pincoin/monitoring/logs/
+sudo chmod 755 /opt/docker/projects/pincoin/infra/logs/
+
+# logrotate 설정 문법 검사
+sudo logrotate -d /etc/logrotate.d/pincoin
+
+# 강제로 로테이션 실행
+sudo logrotate -f /etc/logrotate.d/pincoin
+```
 
 ## 도커 정리 스크립트
 
