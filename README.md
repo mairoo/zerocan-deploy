@@ -1,5 +1,15 @@
 # 도커 기반 프로젝트 운영 배포 예제
 
+## nginx 설정 및 logrotate 설정 심볼릭 링크
+
+```
+sudo ln -s /opt/docker/projects/pincoin/host/pincoin.kr /etc/nginx/sites-enabled/pincoin.kr
+sudo ln -s /opt/docker/projects/pincoin/host/logrotate /etc/logrotate.d/pincoin
+
+# 주의: logrotate 원본 파일이 root 소유여야 함
+sudo chown root:root /opt/docker/projects/pincoin/host/logrotate
+```
+
 ## Git Actions 연동
 
 ## 포트 매핑
