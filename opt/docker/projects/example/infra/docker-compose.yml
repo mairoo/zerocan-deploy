@@ -52,13 +52,12 @@ services:
       - KC_DB_URL=${KEYCLOAK_DB_URL}
       - KC_DB_USERNAME=${KEYCLOAK_POSTGRES_USER}
       - KC_DB_PASSWORD=${KEYCLOAK_POSTGRES_PASSWORD}
-      - KC_HOSTNAME=keycloak.example.com
-      - KC_PROXY_ADDRESS_FORWARDING=true # v2: 프록시 사용 선언
-      - KC_PROXY_HEADERS=xforwarded # v2: 헤더 형식 지정
-      - KC_HTTP_ENABLED=true # 프록시 환경 필수값
-      # 같은 네트워크의 다른 Keycloak 인스턴스 자동 탐지 시도
-      # JGroups 프로토콜로 7800 포트 통신 시도
-      - KC_CACHE=local # 로컬 캐시만 사용할 뿐 멀티캐스트 탐지는 계속 시도
+      - KC_HOSTNAME=keycloak.example.com # 운영환경: 고정 hostname 설정
+      # - KC_HOSTNAME_STRICT=false # 개발환경: 유연한 hostname 처리
+      - KC_PROXY_ADDRESS_FORWARDING=true # 프록시 환경에서 클라이언트 IP 올바르게 인식
+      - KC_PROXY_HEADERS=xforwarded # X-Forwarded-* 헤더 사용 설정
+      - KC_HTTP_ENABLED=true # HTTP 연결 허용 (프록시 환경 필수)
+      - KC_CACHE=local # 단일 인스턴스 로컬 캐시 사용
     # Docker 컨테이너가 새로 시작될 때마다 = 최초 실행으로 인식
     # --optimized는 이미 빌드된 설정이 있을 때만 사용 가능
     command: start 
