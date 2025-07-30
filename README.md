@@ -100,7 +100,17 @@ sudo logrotate -f /etc/logrotate.d/pincoin
 ## 도커 정리 스크립트 
 - [cleanup.sh](/opt/docker/scripts/cleanup.sh)
 
-```
+```shell
 crontab -e
 0 3 * * * /opt/docker/scripts/cleanup.sh
+```
+
+## 주기적 백업 전략
+
+```shell
+# 백업 디렉토리 생성
+sudo mkdir -p /backup
+
+# 백업 실행
+cd /opt && sudo tar czvfp /backup/docker-$(date +%Y%m%d).tgz --exclude='*/logs' docker/
 ```
