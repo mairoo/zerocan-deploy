@@ -1,0 +1,45 @@
+# 빌드 스테이지
+FROM eclipse-temurin:21-jdk-alpine AS builder
+
+WORKDIR /build
+
+# Gradle 래퍼와 설정 파일들을 먼저 복사
+COPY build.gradle.kts settings.gradle.kts gradlew ./
+COPY gradle ./gradle
+
+# gradlew 실행 권한 부여
+RUN chmod +x ./gradlew
+
+# 의존성 먼저 다운로드 (출력 숨김, 캐싱 유지)
+RUN ./gradlew dependencies --no-daemon > /dev/null 2>&1
+
+# 소스 코드 복사
+COPY src ./src
+
+# 애플리케이션 빌드
+RUN ./gradlew clean build -x test --no-daemon
+
+# 실행 스테이지
+FROM eclipse-temurin:21-jre-alpine
+
+WORKDIR /app
+
+# 헬스체크용 curl 설치
+RUN apk add --no-cache curl
+
+# 빌드된 JAR 파일 복사
+COPY --from=builder /build/build/libs/*.jar app.jar
+
+# 애플리케이션 포트 노출
+EXPOSE 8080
+
+# 애플리케이션 실행
+ENTRYPOINT ["java", \
+    "-server", \
+    "-Xms512m", \
+    "-Xmx1024m", \
+    "-XX:+UseG1GC", \
+    "-XX:MaxGCPauseMillis=200", \
+    "-Dfile.encoding=UTF-8", \
+    "-jar", \
+    "app.jar"]

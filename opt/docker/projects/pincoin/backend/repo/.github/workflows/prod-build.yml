@@ -1,0 +1,42 @@
+name: Build for production
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    if: github.ref == 'refs/heads/main'
+    runs-on: [ self-hosted, backend, Production ]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: wrapper
+          cache-read-only: false
+          cache-write-only: false
+
+      - name: Create application-prod.yml from secrets
+        run: |
+          mkdir -p src/main/resources
+          cat << 'EOF' > src/main/resources/application-prod.yml
+          ${{ secrets.PINCOIN_APPLICATION_PROD_YML }}
+          EOF
+
+      - name: Build Docker image
+        run: |
+          echo "🔨 Building Docker image with GitHub Dockerfile..."
+          docker build -f Dockerfile.prod -t ${{ secrets.PREFIX }}-backend:latest .
+
+      - name: Verify Docker image
+        run: |
+          echo "✅ Docker image built successfully"
+          docker images ${{ secrets.PREFIX }}-backend:latest

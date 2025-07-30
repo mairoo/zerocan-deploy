@@ -1,0 +1,42 @@
+name: Build frontend for production
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    if: github.ref == 'refs/heads/main'
+    runs-on: [ self-hosted, frontend, Production ]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: npm-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            npm-${{ runner.os }}-
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Next.js application
+        run: npm run build
+
+      - name: Build Docker image
+        run: |
+          echo "🔨 Building frontend Docker image with GitHub Dockerfile..."
+          docker build -f Dockerfile.prod -t ${{ secrets.PREFIX }}-frontend:latest .
+
+      - name: Verify Docker image
+        run: |
+          echo "✅ Frontend Docker image built successfully"
+          docker images ${{ secrets.PREFIX }}-frontend:latest

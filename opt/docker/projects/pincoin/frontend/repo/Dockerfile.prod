@@ -1,0 +1,37 @@
+# 빌드 스테이지
+FROM node:18-alpine AS builder
+WORKDIR /build
+
+# package.json과 package-lock.json을 먼저 복사 (캐싱 최적화)
+COPY package.json package-lock.json ./
+
+# 의존성 설치
+RUN npm ci --only=production=false
+
+# 소스 코드 복사
+COPY . .
+
+# Next.js 빌드
+RUN npm run build
+
+# 실행 스테이지
+FROM node:18-alpine
+WORKDIR /app
+
+# 헬스체크용 curl 설치
+RUN apk add --no-cache curl
+
+# 빌드된 파일들 복사
+COPY --from=builder /build/.next ./.next
+COPY --from=builder /build/public ./public
+COPY --from=builder /build/package.json ./package.json
+COPY --from=builder /build/package-lock.json ./package-lock.json
+
+# 프로덕션 의존성만 설치
+RUN npm ci --only=production && npm cache clean --force
+
+# Next.js 포트 노출
+EXPOSE 3000
+
+# 애플리케이션 실행
+CMD ["npm", "start"]

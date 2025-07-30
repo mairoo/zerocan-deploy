@@ -1,0 +1,13 @@
+name: Deploy frontend for production
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: [ self-hosted, frontend, Production ]
+    steps:
+      - name: Deploy with docker-compose
+        run: |
+          cd /opt/docker/projects/pincoin/frontend
+          bash ./deploy.sh
