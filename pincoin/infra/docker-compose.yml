@@ -1,0 +1,80 @@
+services:
+  redis:
+    container_name: ${PREFIX}-redis
+    image: redis:alpine
+    restart: unless-stopped
+    volumes:
+      - redis-data:/data
+    networks:
+      - app-network
+    environment:
+      - TZ=Asia/Seoul
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "10"
+
+  keycloak-postgres:
+    container_name: ${PREFIX}-keycloak-postgres
+    image: postgres:15-alpine
+    restart: unless-stopped
+    ports:
+      - "15432:5432"
+    volumes:
+      - keycloak-postgres-data:/var/lib/postgresql/data
+    networks:
+      - app-network
+    environment:
+      - TZ=Asia/Seoul
+      - POSTGRES_DB=${KEYCLOAK_POSTGRES_DATABASE}
+      - POSTGRES_USER=${KEYCLOAK_POSTGRES_USER}
+      - POSTGRES_PASSWORD=${KEYCLOAK_POSTGRES_PASSWORD}
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "10"
+
+  keycloak:
+    container_name: ${PREFIX}-keycloak
+    image: quay.io/keycloak/keycloak:26.3.1
+    restart: unless-stopped
+    ports:
+      - "8801:8080"
+    depends_on:
+      - keycloak-postgres
+    networks:
+      - app-network
+    environment:
+      - TZ=Asia/Seoul
+      - KC_DB=${KEYCLOAK_DB}
+      - KC_DB_URL=${KEYCLOAK_DB_URL}
+      - KC_DB_USERNAME=${KEYCLOAK_POSTGRES_USER}
+      - KC_DB_PASSWORD=${KEYCLOAK_POSTGRES_PASSWORD}
+      - KC_HOSTNAME=keycloak.pincoin.kr
+      - KC_PROXY_ADDRESS_FORWARDING=true # v2: 프록시 사용 선언
+      - KC_PROXY_HEADERS=xforwarded # v2: 헤더 형식 지정
+      - KC_HTTP_ENABLED=true # 프록시 환경 필수값
+      # 같은 네트워크의 다른 Keycloak 인스턴스 자동 탐지 시도
+      # JGroups 프로토콜로 7800 포트 통신 시도
+      - KC_CACHE=local # 로컬 캐시만 사용할 뿐 멀티캐스트 탐지는 계속 시도
+    # Docker 컨테이너가 새로 시작될 때마다 = 최초 실행으로 인식
+    # --optimized는 이미 빌드된 설정이 있을 때만 사용 가능
+    command: start 
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "10"
+
+networks:
+  app-network:
+    name: ${PREFIX}-network
+    driver: bridge
+
+volumes:
+  redis-data:
+    name: ${PREFIX}-redis-data
+  keycloak-postgres-data:
+    name: ${PREFIX}-keycloak-postgres-data
