@@ -1,5 +1,42 @@
 # 도커 기반 프로젝트 운영 배포 예제
 
+## 디렉토리 구성
+
+```
+/opt/docker/
+├── logs/                           # 도커 정리 작업 로그
+├── scripts/                        # cleanup.sh 등 스크립트
+└── projects/pincoin/
+    ├── backend/logs/               # 백엔드 애플리케이션 로그
+    ├── frontend/logs/              # 프론트엔드 애플리케이션 로그  
+    ├── monitoring/logs/            # Grafana 로그
+    ├── infra/logs/                 # Keycloak, Default 로그
+    └── host/                       # nginx 설정, logrotate 설정, SSL 인증서
+```
+
+```shell
+sudo mkdir -p /opt/docker
+sudo chown ubuntu:ubuntu /opt/docker
+
+# 도커 정리 작업 스크립트 및 로그 디렉토리 생성
+mkdir -p /opt/docker/{logs,scripts}
+
+# 프로젝트 로그 디렉토리 생성
+mkdir -p /opt/docker/projects/pincoin/{backend,frontend,monitoring,infra}/logs/
+
+# 로그 디렉토리도 www-data가 쓸 수 있도록 권한 조정
+sudo chown www-data:www-data /opt/docker/projects/pincoin/backend/logs/
+sudo chown www-data:www-data /opt/docker/projects/pincoin/frontend/logs/
+sudo chown www-data:www-data /opt/docker/projects/pincoin/monitoring/logs/
+sudo chown www-data:www-data /opt/docker/projects/pincoin/infra/logs/
+
+# 디렉토리 권한 설정 (www-data가 파일 생성/삭제 가능하도록)
+sudo chmod 755 /opt/docker/projects/pincoin/backend/logs/
+sudo chmod 755 /opt/docker/projects/pincoin/frontend/logs/
+sudo chmod 755 /opt/docker/projects/pincoin/monitoring/logs/
+sudo chmod 755 /opt/docker/projects/pincoin/infra/logs/
+```
+
 ## nginx 설정 및 logrotate 설정 심볼릭 링크
 
 ```
@@ -45,25 +82,13 @@ sudo chown root:root /opt/docker/projects/pincoin/host/logrotate
 - 호스트 nginx 로그: www-data www-data (nginx 프로세스 실행 유저)
 - 도커 내부 로그: root root (도커 컨테이너는 보통 root로 실행)
 
-```
+```shell
 # 호스트 nginx 로그 파일들만 www-data로 변경
 sudo chown www-data:www-data /opt/docker/projects/pincoin/backend/logs/host-*.log
 sudo chown www-data:www-data /opt/docker/projects/pincoin/frontend/logs/host-*.log
 sudo chown www-data:www-data /opt/docker/projects/pincoin/monitoring/logs/grafana-*.log
 sudo chown www-data:www-data /opt/docker/projects/pincoin/infra/logs/keycloak-*.log
 sudo chown www-data:www-data /opt/docker/projects/pincoin/infra/logs/default-*.log
-
-# 로그 디렉토리도 www-data가 쓸 수 있도록 권한 조정
-sudo chown www-data:www-data /opt/docker/projects/pincoin/backend/logs/
-sudo chown www-data:www-data /opt/docker/projects/pincoin/frontend/logs/
-sudo chown www-data:www-data /opt/docker/projects/pincoin/monitoring/logs/
-sudo chown www-data:www-data /opt/docker/projects/pincoin/infra/logs/
-
-# 디렉토리 권한 설정 (www-data가 파일 생성/삭제 가능하도록)
-sudo chmod 755 /opt/docker/projects/pincoin/backend/logs/
-sudo chmod 755 /opt/docker/projects/pincoin/frontend/logs/
-sudo chmod 755 /opt/docker/projects/pincoin/monitoring/logs/
-sudo chmod 755 /opt/docker/projects/pincoin/infra/logs/
 
 # logrotate 설정 문법 검사
 sudo logrotate -d /etc/logrotate.d/pincoin
@@ -72,7 +97,8 @@ sudo logrotate -d /etc/logrotate.d/pincoin
 sudo logrotate -f /etc/logrotate.d/pincoin
 ```
 
-## 도커 정리 스크립트
+## 도커 정리 스크립트 
+- [/opt/docker/scripts/cleanup.sh](cleanup.sh)
 
 ```
 crontab -e
