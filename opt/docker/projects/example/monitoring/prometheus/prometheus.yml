@@ -9,8 +9,8 @@ scrape_configs:
     scrape_interval: 10s
     static_configs:
       - targets:
-        - 'zerocan-backend-1:8080'
-        - 'zerocan-backend-2:8080'
+        - 'example-backend-1:8080'
+        - 'example-backend-2:8080'
     scrape_timeout: 5s
 
   # Prometheus 자체 메트릭

@@ -28,7 +28,7 @@ jobs:
         run: |
           mkdir -p src/main/resources
           cat << 'EOF' > src/main/resources/application-prod.yml
-          ${{ secrets.ZEROCAN_APPLICATION_PROD_YML }}
+          ${{ secrets.example_APPLICATION_PROD_YML }}
           EOF
 
       - name: Build Docker image

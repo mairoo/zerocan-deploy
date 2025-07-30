@@ -1,5 +1,5 @@
 # 백엔드 호스트 nginx 로그
-/opt/docker/projects/zerocan/backend/logs/host-*.log {
+/opt/docker/projects/example/backend/logs/host-*.log {
     daily
     rotate 30
     compress
@@ -14,7 +14,7 @@
 }
 
 # 백엔드 도커 nginx 로그
-/opt/docker/projects/zerocan/backend/logs/load-balancer-*.log {
+/opt/docker/projects/example/backend/logs/load-balancer-*.log {
     daily
     rotate 30
     compress
@@ -27,7 +27,7 @@
 }
 
 # 백엔드 애플리케이션 로그
-/opt/docker/projects/zerocan/backend/logs/application*.log {
+/opt/docker/projects/example/backend/logs/application*.log {
     daily
     rotate 30
     compress
@@ -40,7 +40,7 @@
 }
 
 # 프론트엔드 호스트 nginx 로그
-/opt/docker/projects/zerocan/frontend/logs/host-*.log {
+/opt/docker/projects/example/frontend/logs/host-*.log {
     daily
     rotate 30
     compress
@@ -55,7 +55,7 @@
 }
 
 # 프론트엔드 도커 nginx 로그 (경로 오타 수정)
-/opt/docker/projects/zerocan/frontend/logs/load-balancer-*.log {
+/opt/docker/projects/example/frontend/logs/load-balancer-*.log {
     daily
     rotate 30
     compress
@@ -68,7 +68,7 @@
 }
 
 # Grafana nginx 로그 (호스트 nginx 로그)
-/opt/docker/projects/zerocan/monitoring/logs/grafana-*.log {
+/opt/docker/projects/example/monitoring/logs/grafana-*.log {
     daily
     rotate 7
     compress
@@ -83,7 +83,7 @@
 }
 
 # Keycloak nginx 로그 (호스트 nginx 로그)
-/opt/docker/projects/zerocan/infra/logs/keycloak-*.log {
+/opt/docker/projects/example/infra/logs/keycloak-*.log {
     daily
     rotate 7
     compress
@@ -98,7 +98,7 @@
 }
 
 # 기타 명시되지 않은 요청 로그 (호스트 nginx 로그)
-/opt/docker/projects/zerocan/infra/logs/default-*.log {
+/opt/docker/projects/example/infra/logs/default-*.log {
     daily
     rotate 7
     compress

@@ -187,7 +187,7 @@ sudo systemctl reload nginx
 /opt/docker/
 ├── logs/                           # 도커 정리 작업 로그
 ├── scripts/                        # cleanup.sh 등 스크립트
-└── projects/zerocan/
+└── projects/example/
     ├── backend/logs/               # 백엔드 애플리케이션 로그
     ├── frontend/logs/              # 프론트엔드 애플리케이션 로그  
     ├── monitoring/logs/            # Grafana 로그
@@ -197,29 +197,29 @@ sudo systemctl reload nginx
 
 ```shell
 # 프로젝트 로그 디렉토리 생성
-mkdir -p /opt/docker/projects/zerocan/{backend,frontend,monitoring,infra}/logs/
+mkdir -p /opt/docker/projects/example/{backend,frontend,monitoring,infra}/logs/
 
 # 로그 디렉토리도 www-data가 쓸 수 있도록 권한 조정
-sudo chown www-data:www-data /opt/docker/projects/zerocan/backend/logs/
-sudo chown www-data:www-data /opt/docker/projects/zerocan/frontend/logs/
-sudo chown www-data:www-data /opt/docker/projects/zerocan/monitoring/logs/
-sudo chown www-data:www-data /opt/docker/projects/zerocan/infra/logs/
+sudo chown www-data:www-data /opt/docker/projects/example/backend/logs/
+sudo chown www-data:www-data /opt/docker/projects/example/frontend/logs/
+sudo chown www-data:www-data /opt/docker/projects/example/monitoring/logs/
+sudo chown www-data:www-data /opt/docker/projects/example/infra/logs/
 
 # 디렉토리 권한 설정 (www-data가 파일 생성/삭제 가능하도록)
-sudo chmod 755 /opt/docker/projects/zerocan/backend/logs/
-sudo chmod 755 /opt/docker/projects/zerocan/frontend/logs/
-sudo chmod 755 /opt/docker/projects/zerocan/monitoring/logs/
-sudo chmod 755 /opt/docker/projects/zerocan/infra/logs/
+sudo chmod 755 /opt/docker/projects/example/backend/logs/
+sudo chmod 755 /opt/docker/projects/example/frontend/logs/
+sudo chmod 755 /opt/docker/projects/example/monitoring/logs/
+sudo chmod 755 /opt/docker/projects/example/infra/logs/
 ```
 
 ## nginx 설정 및 logrotate 설정 심볼릭 링크
 
 ```
-sudo ln -s /opt/docker/projects/zerocan/host/zerocan.com /etc/nginx/sites-enabled/zerocan.com
-sudo ln -s /opt/docker/projects/zerocan/host/logrotate /etc/logrotate.d/zerocan
+sudo ln -s /opt/docker/projects/example/host/example.com /etc/nginx/sites-enabled/example.com
+sudo ln -s /opt/docker/projects/example/host/logrotate /etc/logrotate.d/example
 
 # 주의: logrotate 원본 파일이 root 소유여야 함
-sudo chown root:root /opt/docker/projects/zerocan/host/logrotate
+sudo chown root:root /opt/docker/projects/example/host/logrotate
 ```
 
 ## Github Actions 연동
@@ -229,7 +229,7 @@ sudo chown root:root /opt/docker/projects/zerocan/host/logrotate
 저장소 별 **Settings > Security > Secrets and variables > Actions > Repository secrets** 설정
 - 백엔드
     - PREFIX
-    - ZEROCAN_APPLICATION_PROD_YML
+    - EXAMPLE_APPLICATION_PROD_YML
 - 프론트엔드
     - PREFIX
     - DOTENV
@@ -240,16 +240,16 @@ sudo chown root:root /opt/docker/projects/zerocan/host/logrotate
 
 ```shell
 # 1. /opt/runner 디렉토리 생성
-sudo mkdir -p /opt/pincoin-{backend,front}-prod-runner
+sudo mkdir -p /opt/example-{backend,front}-prod-runner
 
 # 2. ubuntu 사용자 소유권 설정
-sudo chown ubuntu:ubuntu /opt/pincoin-*-prod-runner
+sudo chown ubuntu:ubuntu /opt/example-*-prod-runner
 ```
 
 #### 백엔드 러너 설치 예시
 ```shell
 # 3. 디렉토리로 이동
-cd /opt/pincoin-backend-prod-runner
+cd /opt/example-backend-prod-runner
 
 # 4. 최신 runner 패키지 다운로드
 curl -o actions-runner-linux-x64-2.326.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.326.0/actions-runner-linux-x64-2.326.0.tar.gz
@@ -265,7 +265,7 @@ tar xzf ./actions-runner-linux-x64-2.326.0.tar.gz
 
 # 8. 구성 중 질문 답변:
 # Enter the name of the runner group to add this runner to: [엔터]
-# Enter the name of runner: pincoin-backend-prod-runner
+# Enter the name of runner: example-backend-prod-runner
 # Enter any additional labels (ex. label-1,label-2): backend,Production
 # Enter name of work folder: [엔터]
 
@@ -277,13 +277,13 @@ tar xzf ./actions-runner-linux-x64-2.326.0.tar.gz
 
 ```shell
 # 1. /opt/runner 디렉토리 생성
-sudo mkdir -p /opt/pincoin-frontend-prod-runner
+sudo mkdir -p /opt/example-frontend-prod-runner
 
 # 2. ubuntu 사용자 소유권 설정
-sudo chown ubuntu:ubuntu /opt/pincoin-frontend-prod-runner
+sudo chown ubuntu:ubuntu /opt/example-frontend-prod-runner
 
 # 3. 디렉토리로 이동
-cd /opt/pincoin-frontend-prod-runner
+cd /opt/example-frontend-prod-runner
 
 # 4. 최신 runner 패키지 다운로드
 curl -o actions-runner-linux-x64-2.326.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.326.0/actions-runner-linux-x64-2.326.0.tar.gz
@@ -299,7 +299,7 @@ tar xzf ./actions-runner-linux-x64-2.326.0.tar.gz
 
 # 8. 구성 중 질문 답변:
 # Enter the name of the runner group to add this runner to: [엔터]
-# Enter the name of runner: pincoin-frontend-prod-runner
+# Enter the name of runner: example-frontend-prod-runner
 # Enter any additional labels (ex. label-1,label-2): frontend,Production
 # Enter name of work folder: [엔터]
 
@@ -319,13 +319,13 @@ sudo ./svc.sh status
 
 ```shell
 # 1. 서비스만 중지/제거 (예, 프론트 러너)
-cd /opt/pincoin-frontend-prod-runner
+cd /opt/example-frontend-prod-runner
 sudo ./svc.sh stop
 sudo ./svc.sh uninstall
 
 # 2. 디렉토리 삭제
 cd /
-sudo rm -rf /opt/pincoin-frontend-prod-runner
+sudo rm -rf /opt/example-frontend-prod-runner
 ```
 
 **GitHub / 저장소 접속 후 Settings > Actions > Runners 메뉴로 이동 등록한 기존 runner 삭제**
@@ -365,17 +365,17 @@ sudo rm -rf /opt/pincoin-frontend-prod-runner
 
 ```shell
 # 호스트 nginx 로그 파일들만 www-data로 변경
-sudo chown www-data:www-data /opt/docker/projects/zerocan/backend/logs/host-*.log
-sudo chown www-data:www-data /opt/docker/projects/zerocan/frontend/logs/host-*.log
-sudo chown www-data:www-data /opt/docker/projects/zerocan/monitoring/logs/grafana-*.log
-sudo chown www-data:www-data /opt/docker/projects/zerocan/infra/logs/keycloak-*.log
-sudo chown www-data:www-data /opt/docker/projects/zerocan/infra/logs/default-*.log
+sudo chown www-data:www-data /opt/docker/projects/example/backend/logs/host-*.log
+sudo chown www-data:www-data /opt/docker/projects/example/frontend/logs/host-*.log
+sudo chown www-data:www-data /opt/docker/projects/example/monitoring/logs/grafana-*.log
+sudo chown www-data:www-data /opt/docker/projects/example/infra/logs/keycloak-*.log
+sudo chown www-data:www-data /opt/docker/projects/example/infra/logs/default-*.log
 
 # logrotate 설정 문법 검사
-sudo logrotate -d /etc/logrotate.d/zerocan
+sudo logrotate -d /etc/logrotate.d/example
 
 # 강제로 로테이션 실행
-sudo logrotate -f /etc/logrotate.d/zerocan
+sudo logrotate -f /etc/logrotate.d/example
 ```
 
 ## 도커 정리 스크립트 
