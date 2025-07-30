@@ -4,14 +4,8 @@ check_health() {
     local service=$1
     echo "⏳ Waiting for $service to be healthy..."
     for i in {1..36}; do  # 3분 대기 (5초 * 36)
-        # 컨테이너 내부에서 curl 실행 (백엔드와 동일한 방식)
-        if [[ "$service" == "frontend"* ]]; then
-            endpoint="http://localhost:3000"
-        else
-            endpoint="http://localhost:8080/actuator/health"
-        fi
-        
-        if docker compose exec -T $service curl -f -s $endpoint > /dev/null 2>&1; then
+        # 프론트엔드 헬스체크
+        if docker compose exec -T $service curl -f -s http://localhost:3000 > /dev/null 2>&1; then
             echo "✅ $service is healthy!"
             return 0
         fi
@@ -34,8 +28,8 @@ restart_service() {
     fi
 }
 
-# 서비스 순차적 재시작
-echo "🔄 Rolling restart..."
+# 프론트엔드 서비스 순차적 재시작
+echo "🔄 Frontend rolling restart..."
 
 # frontend-1 재시작
 if restart_service "frontend-1"; then
@@ -53,4 +47,4 @@ else
     exit 1
 fi
 
-echo "🎉 All services restarted successfully!"
+echo "🎉 All frontend services restarted successfully!"
