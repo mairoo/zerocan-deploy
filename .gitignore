@@ -1,1 +1,19 @@
-.DS_Store
+# IDE
+**/.idea/
+**/.vscode/
+**/*.swp
+**/*.swo
+**/*~
+**/.DS_Store
+**/Thumbs.db
+
+# 빌드
+**/dist/
+**/build/
+**/target/
+**/out/
+**/bin/
+
+# 로그
+**/logs/
+**/*.log
