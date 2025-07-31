@@ -39,7 +39,7 @@ Grafana 접속 후:
 
 ## 도커 이미지 재생성 및 재시작
 
-```
+```shell
 docker compose down
 docker volume rm example-grafana-data
 docker compose up -d
