@@ -1,0 +1,91 @@
+services:
+  redis:
+    container_name: ${PREFIX}-redis
+    image: redis:alpine
+    restart: unless-stopped
+    volumes:
+      - redis-data:/data
+    networks:
+      - app-network
+    environment:
+      - TZ=Asia/Seoul
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "10"
+
+  keycloak:
+    container_name: ${PREFIX}-keycloak
+    image: quay.io/keycloak/keycloak:26.3.1
+    restart: unless-stopped
+    ports:
+      - "8081:8080"
+    networks:
+      - app-network
+    environment:
+      - TZ=Asia/Seoul
+      - KC_DB=${KEYCLOAK_DB}
+      - KC_DB_URL=${KEYCLOAK_DB_URL}
+      - KC_DB_USERNAME=${KEYCLOAK_POSTGRES_USER}
+      - KC_DB_PASSWORD=${KEYCLOAK_POSTGRES_PASSWORD}
+      # - KC_HOSTNAME=keycloak.example.com # 운영환경: 고정 hostname 설정
+      - KC_HOSTNAME_STRICT=false # 개발환경: 유연한 hostname 처리
+      - KC_PROXY_ADDRESS_FORWARDING=true # 프록시 환경에서 클라이언트 IP 올바르게 인식
+      - KC_PROXY_HEADERS=xforwarded # X-Forwarded-* 헤더 사용 설정
+      - KC_HTTP_ENABLED=true # HTTP 연결 허용 (프록시 환경 필수)
+      - KC_CACHE=local # 단일 인스턴스 로컬 캐시 사용
+    command: start
+    volumes:
+      - keycloak-data:/opt/keycloak/data
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "10"
+
+  backend:
+    container_name: ${PREFIX}-backend
+    image: ${PREFIX}-backend:local
+    build:
+      context: ./repo
+      dockerfile: Dockerfile.local
+    working_dir: /app
+    volumes:
+      - ./repo:/app:cached  # 소스코드를 볼륨 마운트
+      - gradle-cache:/root/.gradle
+    ports:
+      - "8080:8080"
+    depends_on:
+      - redis
+      - keycloak
+    networks:
+      - app-network
+    environment:
+      - TZ=Asia/Seoul
+      - SPRING_PROFILES_ACTIVE=local
+      - KEYCLOAK_AUTH_SERVER_URL=http://keycloak:8080
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "5"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/actuator/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+networks:
+  app-network:
+    name: ${PREFIX}-network
+    driver: bridge
+
+volumes:
+  redis-data:
+    name: ${PREFIX}-redis-data
+  gradle-cache:
+    name: ${PREFIX}-gradle-cache
+  keycloak-data:
+    name: ${PREFIX}-keycloak-data
