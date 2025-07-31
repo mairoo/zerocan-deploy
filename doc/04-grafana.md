@@ -13,6 +13,23 @@ Grafana = 리포트 생성기 + 대시보드
 - 창고에서 데이터를 가져와서
 - 예쁜 차트와 그래프로 만들어 보여줌
 
+## 디렉토리 구조
+
+```
+/opt/docker/pincoin/monitoring/
+├── docker-compose.yml
+├── .env
+├── prometheus/
+│   └── prometheus.yml
+└── grafana/
+    └── provisioning/
+        ├── datasources/
+        │   └── prometheus.yml
+        └── dashboards/
+            ├── dashboard.yml
+            └── spring-boot-dashboard.json
+```
+
 ## 접속 정보
 
 - **Grafana**: https://grafana.example.com

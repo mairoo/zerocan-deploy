@@ -10,6 +10,14 @@
     - PREFIX
     - DOTENV
 
+## Self-hosted Runner 장점
+
+- 이미 서버 관리 중: 추가 관리 부담 적음
+- 성능 향상: 3-5배 빠른 배포 가능
+- 비용 절약: GitHub Actions 과금 없음
+- 보안 강화: 내부 네트워크에서 처리
+- SSH 설정 불필요: Runner가 GitHub 서버에 443 포트로 직접 명령 실행
+
 ## Self-hosted Runner 설치
 
 **GitHub / 저장소 접속 후 Settings > Actions > Runners 메뉴로 이동 New self-hosted runner 버튼 클릭 후 실제 해시값 확인**
