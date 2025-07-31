@@ -16,7 +16,7 @@ Grafana = 리포트 생성기 + 대시보드
 ## 디렉토리 구조
 
 ```
-/opt/docker/pincoin/monitoring/
+/opt/docker/example/monitoring/
 ├── docker-compose.yml
 ├── .env
 ├── prometheus/
