@@ -1,0 +1,39 @@
+services:
+  frontend:
+    container_name: ${PREFIX}-frontend
+    image: ${PREFIX}-frontend:local
+    build:
+      context: ./repo
+      dockerfile: Dockerfile.local
+    working_dir: /app
+    volumes:
+      - ./repo:/app:cached # Hot reload 지원 (1)
+      - node-modules-cache:/app/node_modules
+    ports:
+      - "3000:3000"
+    networks:
+      - app-network
+    environment:
+      - TZ=Asia/Seoul
+      - NODE_ENV=development
+      - WATCHPACK_POLLING=true # Hot reload 지원 (2)
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "5"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:3000" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+networks:
+  app-network:
+    name: ${PREFIX}-network
+    external: true
+
+volumes:
+  node-modules-cache:
+    name: ${PREFIX}-node-modules-cache

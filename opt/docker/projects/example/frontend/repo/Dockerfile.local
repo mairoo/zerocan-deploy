@@ -12,4 +12,6 @@ RUN npm install
 COPY . .
 
 VOLUME ["/app"]
+
+# Hot reload 지원 실행
 CMD ["npm", "run", "dev"]

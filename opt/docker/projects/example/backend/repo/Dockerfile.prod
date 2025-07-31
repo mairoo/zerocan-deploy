@@ -27,6 +27,9 @@ WORKDIR /app
 # 헬스체크용 curl 설치
 RUN apk add --no-cache curl
 
+# 설정 파일 마운트 준비
+RUN mkdir -p config
+
 # 빌드된 JAR 파일 복사
 COPY --from=builder /build/build/libs/*.jar app.jar
 

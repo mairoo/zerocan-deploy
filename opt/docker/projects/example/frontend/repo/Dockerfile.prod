@@ -21,6 +21,9 @@ WORKDIR /app
 # 헬스체크용 curl 설치
 RUN apk add --no-cache curl
 
+# 설정 파일 마운트 준비
+RUN mkdir -p config
+
 # 빌드된 파일들 복사
 COPY --from=builder /build/.next ./.next
 COPY --from=builder /build/public ./public
