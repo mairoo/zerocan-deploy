@@ -42,4 +42,5 @@ ENTRYPOINT ["java", \
     "-XX:MaxGCPauseMillis=200", \
     "-Dfile.encoding=UTF-8", \
     "-jar", \
-    "app.jar"]
+    "app.jar", \
+    "--spring.config.location=classpath:/application.yml,/app/application-prod.yml"]

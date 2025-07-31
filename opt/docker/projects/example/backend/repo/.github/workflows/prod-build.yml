@@ -24,13 +24,6 @@ jobs:
           cache-read-only: false
           cache-write-only: false
 
-      - name: Create application-prod.yml from secrets
-        run: |
-          mkdir -p src/main/resources
-          cat << 'EOF' > src/main/resources/application-prod.yml
-          ${{ secrets.example_APPLICATION_PROD_YML }}
-          EOF
-
       - name: Build Docker image
         run: |
           echo "🔨 Building Docker image with GitHub Dockerfile..."
