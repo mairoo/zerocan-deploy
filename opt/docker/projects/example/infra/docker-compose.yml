@@ -20,7 +20,7 @@ services:
     image: postgres:15-alpine
     restart: unless-stopped
     ports:
-      - "15432:5432"
+      - "${KEYCLOAK_POSTGRES_PORT}:5432"
     volumes:
       - keycloak-postgres-data:/var/lib/postgresql/data
     networks:
@@ -50,8 +50,8 @@ services:
       - app-network
     environment:
       - TZ=Asia/Seoul
-      - KC_DB=${KEYCLOAK_DB}
-      - KC_DB_URL=${KEYCLOAK_DB_URL}
+      - KC_DB=postgres
+      - KC_DB_URL=jdbc:postgresql://${KEYCLOAK_POSTGRES_HOST}:5432/${KEYCLOAK_POSTGRES_DATABASE}
       - KC_DB_USERNAME=${KEYCLOAK_POSTGRES_USER}
       - KC_DB_PASSWORD=${KEYCLOAK_POSTGRES_PASSWORD}
       - KC_HOSTNAME=keycloak.example.com # 운영환경: 고정 hostname 설정
@@ -69,6 +69,78 @@ services:
         max-size: "20m"
         max-file: "10"
 
+  # Backend MariaDB (필요시 주석 해제)
+  # backend-mariadb:
+  #   container_name: ${PREFIX}-backend-mariadb
+  #   image: mariadb:11
+  #   restart: unless-stopped
+  #   ports:
+  #     - "${BACKEND_DATABASE_PORT}:3306"
+  #   volumes:
+  #     - backend-mariadb-data:/var/lib/mysql
+  #   networks:
+  #     - app-network
+  #   environment:
+  #     - TZ=Asia/Seoul
+  #     - MARIADB_ROOT_PASSWORD=root_password_1234
+  #     - MARIADB_DATABASE=${BACKEND_DATABASE_NAME}
+  #     - MARIADB_USER=${BACKEND_DATABASE_USERNAME}
+  #     - MARIADB_PASSWORD=${BACKEND_DATABASE_PASSWORD}
+  #   logging:
+  #     driver: "json-file"
+  #     options:
+  #       max-size: "20m"
+  #       max-file: "10"
+
+  # Backend PostgreSQL (필요시 주석 해제)
+  # backend-postgres:
+  #   container_name: ${PREFIX}-backend-postgres
+  #   image: postgres:15-alpine
+  #   restart: unless-stopped
+  #   ports:
+  #     - "${BACKEND_DATABASE_PORT}:5432"
+  #   volumes:
+  #     - backend-postgres-data:/var/lib/postgresql/data
+  #   networks:
+  #     - app-network
+  #   environment:
+  #     - TZ=Asia/Seoul
+  #     - POSTGRES_DB=${BACKEND_DATABASE_NAME}
+  #     - POSTGRES_USER=${BACKEND_DATABASE_USERNAME}
+  #     - POSTGRES_PASSWORD=${BACKEND_DATABASE_PASSWORD}
+  #   logging:
+  #     driver: "json-file"
+  #     options:
+  #       max-size: "20m"
+  #       max-file: "10"
+
+  # Backend Application (필요시 주석 해제)
+  # backend:
+  #   container_name: ${PREFIX}-backend
+  #   image: your-backend-image:latest
+  #   restart: unless-stopped
+  #   ports:
+  #     - "8802:8080"
+  #   depends_on:
+  #     - backend-mariadb  # 또는 backend-postgres
+  #     - redis
+  #   networks:
+  #     - app-network
+  #   environment:
+  #     - TZ=Asia/Seoul
+  #     - DATABASE_HOST=${BACKEND_DATABASE_HOST}
+  #     - DATABASE_PORT=${BACKEND_DATABASE_PORT}
+  #     - DATABASE_NAME=${BACKEND_DATABASE_NAME}
+  #     - DATABASE_USERNAME=${BACKEND_DATABASE_USERNAME}
+  #     - DATABASE_PASSWORD=${BACKEND_DATABASE_PASSWORD}
+  #     - REDIS_HOST=redis
+  #     - REDIS_PORT=6379
+  #   logging:
+  #     driver: "json-file"
+  #     options:
+  #       max-size: "20m"
+  #       max-file: "10"
+
 networks:
   app-network:
     name: ${PREFIX}-network
@@ -81,3 +153,8 @@ volumes:
     name: ${PREFIX}-keycloak-postgres-data
   keycloak-data:
     name: ${PREFIX}-keycloak-data
+  # Backend volumes (필요시 주석 해제)
+  # backend-mariadb-data:
+  #   name: ${PREFIX}-backend-mariadb-data
+  # backend-postgres-data:
+  #   name: ${PREFIX}-backend-postgres-data
