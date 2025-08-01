@@ -13,19 +13,26 @@
 
 ### 도커 컨테이너
 
-| 서비스            | 외부포트 | 내부포트 | 역할           |
-| ----------------- | -------- | -------- | -------------- |
-| redis             | -        | 6379     | 내부전용       |
-| keycloak-postgres | 15432    | 5432     | 관리용         |
-| keycloak          | 8801     | 8080     | 인증서버       |
-| nginx-api         | 8800     | 8080     | API 로드밸런서 |
-| backend-1         | -        | 8080     | 내부전용       |
-| backend-2         | -        | 8080     | 내부전용       |
-| prometheus        | -        | 9090     | 내부전용       |
-| grafana           | 9300     | 3000     | 모니터링       |
-| nginx-www         | 8300     | 3000     | 웹 로드밸런서  |
-| frontend-1        | -        | 3000     | 내부전용       |
-| frontend-2        | -        | 3000     | 내부전용       |
+| 서비스            | 이미지 버전                           | 외부포트 | 내부포트 | 역할           |
+| ----------------- | -------------------------------- | -------- | -------- | -------------- |
+| redis             | redis:alpine                     | -        | 6379     | 내부전용       |
+| keycloak-postgres | postgres:15-alpine               | 15432    | 5432     | 관리용         |
+| keycloak          | quay.io/keycloak/keycloak:26.3.1 | 8801     | 8080     | 인증서버       |
+| nginx-api         | nginx:alpine                     | 8800     | 8080     | API 로드밸런서 |
+| backend-1         | ${PREFIX}-backend:latest         | -        | 8080     | 내부전용       |
+| backend-2         | ${PREFIX}-backend:latest         | -        | 8080     | 내부전용       |
+| prometheus        | prom/prometheus:latest           | -        | 9090     | 내부전용       |
+| grafana           | grafana/grafana:latest           | 9300     | 3000     | 모니터링       |
+| nginx-www         | nginx:alpine                     | 8300     | 3000     | 웹 로드밸런서  |
+| frontend-1        | ${PREFIX}-frontend:latest        | -        | 3000     | 내부전용       |
+| frontend-2        | ${PREFIX}-frontend:latest        | -        | 3000     | 내부전용       |
+
+백엔드 SDK 이미지 버전
+- eclipse-temurin:21-jdk-alpine
+- eclipse-temurin:21-jre-alpine
+
+프론트엔드 SDK 이미지 버전
+- node:18-alpine
 
 ## 개발 환경 포트 매핑
 
