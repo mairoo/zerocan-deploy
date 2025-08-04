@@ -17,7 +17,9 @@ services:
 
   keycloak:
     container_name: ${PREFIX}-keycloak
-    image: quay.io/keycloak/keycloak:26.3.1
+    build:
+      context: .
+      dockerfile: Dockerfile.keycloak
     restart: unless-stopped
     ports:
       - "8081:8080"

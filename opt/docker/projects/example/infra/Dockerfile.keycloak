@@ -1,0 +1,13 @@
+# Dockerfile.keycloak
+FROM quay.io/keycloak/keycloak:26.3.1
+
+# libs 디렉토리의 모든 JAR 파일을 프로바이더로 복사
+COPY libs/*.jar /opt/keycloak/providers/
+
+# 권한 설정
+USER root
+RUN chown keycloak:keycloak /opt/keycloak/providers/*.jar
+USER keycloak
+
+# 프로바이더 빌드 (선택사항 - 성능 향상)
+RUN /opt/keycloak/bin/kc.sh build
